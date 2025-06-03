@@ -4,6 +4,8 @@ import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/test", (req: Request, res: Response) => {
   res.end("REQUEST RECEIVED SUCCESSFULLY");
 });

@@ -1,26 +1,27 @@
 import { Request, Response, NextFunction } from "express";
+import { asyncHandler } from "../utils/asyncHandler";
+import { Post } from "../models/post.model";
+import { ApiError } from "../utils/ApiError";
+import { ApiResponse } from "../utils/ApiResponse";
 
-const POSTS_DATA = [
-  {
-    id: 1,
-    content: "HELLO",
-    author: {
-      username: "Prasanna",
-    },
-  },
-  {
-    id: 2,
-    content: "WORLD",
-    author: {
-      username: "Sakshyam",
-    },
-  },
-];
+const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
+  const allPosts = await Post.find({});
+  res
+    .status(200)
+    .json(new ApiResponse(200, "Posts retrieved successfully", allPosts));
+});
 
-const getAllPosts = (req: Request, res: Response) => {
-  res.status(200).json(POSTS_DATA);
-};
+const createPost = asyncHandler(async (req: Request, res: Response) => {
+  console.log("REQ HIT HERE");
+  const { content } = req.body;
+  if (!content)
+    throw new ApiError(400, "Please provide some content for the post");
+  const newPost = new Post({
+    content,
+  });
 
-const createPost = (req: Request, res: Response) => {};
+  await newPost.save();
+  res.status(201).json(new ApiResponse(201, "Post created successfully", null));
+});
 
-export { getAllPosts };
+export { getAllPosts, createPost };
