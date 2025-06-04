@@ -17,7 +17,7 @@ const errorHandler: ErrorRequestHandler = (
 
   res
     .status(statusCode)
-    .json({ success: error.success, message: error.message });
+    .json({ success: error.success, statusCode, message: errorMessage });
 };
 
 export { errorHandler };
